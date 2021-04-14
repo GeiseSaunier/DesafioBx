@@ -70,11 +70,6 @@ export default function PokemonArea() {
                     state.checked && user.pokemons && user.pokemons.map((id) => <PokemonCard id={id} />)
                 }
 
-
-
-
-
-
             </Paper>
         </Grid>
     )

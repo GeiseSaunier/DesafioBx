@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -7,7 +7,7 @@ import { Button } from '@material-ui/core'
 import firebase from "firebase/app";
 import "firebase/auth";
 import PokemonArea from '../../components/PokemonArea';
-
+import ListUser from '../../components/ListUser';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Dashboard() {
     const classes = useStyles();
     const { user, setCurrentUser } = useContext(UserContext)
+    const [usuarios, setUsuarios] = useState([]);
 
     const logout = () => {
         firebase.auth().signOut().then(() => {
@@ -31,6 +32,16 @@ export default function Dashboard() {
         }).catch((error) => {
         });
     }
+
+    useEffect(() => {
+        firebase.firestore().collection('users').onSnapshot((snap) => {
+            let users = snap.docs.map((user) => {
+                return user.data()
+            })
+            setUsuarios(users);
+        });
+
+    }, [])
 
     return (
         <div className={classes.root}>
@@ -64,6 +75,18 @@ export default function Dashboard() {
                 <Grid item xs={12} sm={4}>
                     <Paper className={classes.paper}>
                         <h5>Usuários</h5>
+                        {
+                            usuarios.length > 0 ?
+                                <div>
+                                    {
+                                        usuarios.map((usuario) => {
+                                            if (usuario.id != user.id)
+                                                return <ListUser user={usuario} />
+                                        })
+                                    }
+                                </div>
+                                : null
+                        }
                     </Paper>
                 </Grid>
             </Grid>

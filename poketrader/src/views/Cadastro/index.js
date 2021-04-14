@@ -81,9 +81,6 @@ export default function Login() {
                         >
                             Cadastrar
                         </Button>
-                        {/*  {
-                            (success) && <Redirect to="/vehicles" />
-                        } */}
                     </div>
                 </div>
             </div>
